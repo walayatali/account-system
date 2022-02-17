@@ -1,13 +1,12 @@
 import React from 'react';
 import Card from '../UI/Card';
-import classes from './ListAccounts.module.css';
 import AccountStatement from './AccountStatement';
+import NavBar from '../Header/NavBar';
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   NavLink,
-  Redirect
 } from "react-router-dom";
 
 const DummyAccounts = [
@@ -17,26 +16,21 @@ const DummyAccounts = [
 ];
 
 
-function ListAccounts(props)	{
 
+function ListAccounts(props)	{
 	return (
 		<Card>
-			<button onClick={props.logout}>Logout</button>
-			<Router>
-				{
+			{ <button onClick={props.logout}>Logout</button>}
+			
+			<Router>			
+						<NavBar key="sdasd" link="/" account={{id:"1212", name:"all accounts"}}/>
+				{   
 					DummyAccounts.map(account => (
-						<div key={account.id} className={classes.account} >
-						
-							<NavLink to={"/AccountStatement/" + account.name}>{account.name}</NavLink>
-						
-						</div>
+						<NavBar key={account.id} link={"/AccountStatement/" + account.name} account={account}/>
 					))
 				}
 				<Routes>
-
-							<Route exact path="/AccountStatement/:accountId" element={<AccountStatement />}  />
-
-
+							<Route exact path="/AccountStatement/:accountId" element={<AccountStatement  />}  />
 				</Routes>
 			</Router>
 		</Card>
