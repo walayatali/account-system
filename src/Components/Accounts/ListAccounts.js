@@ -26,7 +26,7 @@ function ListAccounts(props)	{
 						<NavBar key="sdasd" link="/" account={{id:"1212", name:"all accounts"}}/>
 				{   
 					DummyAccounts.map(account => (
-						<NavBar key={account.id} link={"/AccountStatement/" + account.name} account={account}/>
+						<NavBar key={account.id} link={"/AccountStatement/" + account.id} account={account}/>
 					))
 				}
 				<Routes>

@@ -9,10 +9,7 @@ import {
 } from "react-router-dom";
 function NavBar(props)	{
 	let location = useLocation();
-	const currLocation = useMemo(()=> {
-		console.log(location.pathname)
-	    return location.pathname;
-	  }, [location.pathname])
+	const currLocation = location.pathname;
 	return (
 		<>
 	{ props.account.name !== 'all accounts' && !(currLocation.includes('AccountStatement')) && 	 
