@@ -20,9 +20,9 @@ const DummyAccounts = [
 function ListAccounts(props)	{
 	return (
 		<Card>
-			{ <button onClick={props.logout}>Logout</button>}
-			
-			<Router>			
+						
+						<NavBar onClick={props.logout} key="sdasdsdsa" link="/" account={{id:"121223243", name:"Logout"}}/>
+						
 						<NavBar key="sdasd" link="/" account={{id:"1212", name:"all accounts"}}/>
 				{   
 					DummyAccounts.map(account => (
@@ -32,7 +32,6 @@ function ListAccounts(props)	{
 				<Routes>
 							<Route exact path="/AccountStatement/:accountId" element={<AccountStatement  />}  />
 				</Routes>
-			</Router>
 		</Card>
 	)
 }

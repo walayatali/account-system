@@ -13,13 +13,13 @@ function NavBar(props)	{
 	return (
 		<>
 	{ props.account.name !== 'all accounts' && !(currLocation.includes('AccountStatement')) && 	 
-		<div key={props.account.id} className={classes.account} >
-			<NavLink key={props.account.id} to={props.link}>{props.account.name}</NavLink>
+		<div key={props.account.id} className={`${props.account.name !== 'Logout' ?  classes.account : ''} `} >
+			<NavLink onClick={props.onClick} key={props.account.id} to={props.link}>{props.account.name}</NavLink>
 		</div>
 	}
-	{ (currLocation.includes('AccountStatement')) && props.account.name === 'all accounts' && 	 
+	{ (currLocation.includes('AccountStatement')) && (props.account.name === 'all accounts' || props.account.name === 'Logout') && 	 
 		<div key="all_accounts_div"  >
-			<NavLink key="all_accounts_link" to={props.link}>{props.account.name}</NavLink>
+			<NavLink onClick={props.onClick} key="all_accounts_link" to={props.link}>{props.account.name}</NavLink>
 		</div>
 	}
 	</>
