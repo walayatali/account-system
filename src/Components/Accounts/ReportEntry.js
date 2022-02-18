@@ -14,7 +14,7 @@ function ReportEntry(props)	{
 					</div>
 					<div className={classes['expense-item__description']}>
 						<h2>asdasd</h2>
-						<p className={classes['expense-item__price']}>$ 290</p>
+						<p className={classes['expense-item__price']}>$ {props.reportData.price}</p>
 					</div>
 				</Card>
 			</li>
