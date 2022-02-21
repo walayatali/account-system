@@ -5,7 +5,7 @@ import {
   Routes,
   Route,
   NavLink,
-  useLocation
+  useLocation,
 } from "react-router-dom";
 function NavBar(props)	{
 	let location = useLocation();
@@ -17,7 +17,7 @@ function NavBar(props)	{
 			<NavLink onClick={props.onClick} key={props.account.id} to={props.link}>{props.account.name}</NavLink>
 		</div>
 	}
-	{ (currLocation.includes('AccountStatement')) && (props.account.name === 'all accounts' || props.account.name === 'Logout') && 	 
+	{ (currLocation.includes('AccountStatement')) && (props.account.name === 'Add Expense' || props.account.name === 'all accounts' || props.account.name === 'Logout') && 	 
 		<div key="all_accounts_div"  >
 			<NavLink onClick={props.onClick} key="all_accounts_link" to={props.link}>{props.account.name}</NavLink>
 		</div>

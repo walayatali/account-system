@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import classes from './AddExpense.module.css';
+import ReportContext from '../Store/report-context';
 
 
 function AddExpense(props)	{
+const ctxRep =  useContext(ReportContext);
 
 async function addExpenseHandler(expense) {
-	const response = await fetch('https://expensetracker-706b7-default-rtdb.firebaseio.com/expense.json', {
+	const response = await fetch(`https://expensetracker-706b7-default-rtdb.firebaseio.com/expense/${props.id}.json`, {
 	  method: 'POST',
 	  body: JSON.stringify(expense),
 	  headers: {
@@ -13,7 +15,7 @@ async function addExpenseHandler(expense) {
 	  }
 	});
 	const data = await response.json();
-	console.log(data);
+	// console.log(data);
 }
 
 
@@ -55,12 +57,23 @@ const submitHandler = (e) => {
 		"Price": userInput.price,
 		"ItemDate": new Date(userInput.date),
 	};
+	let d = new Date(userInput.date);
+	const expenseDataCtx = {
+		"description": userInput.description,
+		"Price": userInput.price,
+		"day": d.getUTCDate(),
+		"month": d.getMonth()+1,
+		"year": d.getFullYear(),
+	};
 	addExpenseHandler(expenseData)
 	setUserInput({
 		description: '',
 		price: '',
 		date: ''
 	});
+	props.onCancel();
+	ctxRep.onExpensesUpdate(expenseDataCtx);
+
 }
 	return (
 		<div className={classes['new-expense']}>

@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import Login from './Components/Auth/Login';
 import ListAccounts from './Components/Accounts/ListAccounts';
 import AuthContext from './Components/Store/auth-context';
+import ReportContext from './Components/Store/report-context';
 
 
 function App() {
     const [userObj, setUserObj] = useState({email: '', password: ''});
+    const [expenseNotify, setExpenseNotify] = useState({});
     
     const authContextObj = {
         email: userObj.email,
@@ -30,12 +32,20 @@ function App() {
 
     }
 
-
+    const expensesUpdatedObj = {
+        expensesUpdated: expenseNotify,
+        onExpensesUpdate: (val) => {
+            setExpenseNotify(val);
+        }
+    }
 
     return (
         <AuthContext.Provider value={authContextObj}>
             {!(userObj.email) && <Login/>}
-            {(userObj.email) && <ListAccounts logout={logoutHandler}/>}
+            {(userObj.email) && 
+                <ReportContext.Provider value={expensesUpdatedObj}>
+                    <ListAccounts logout={logoutHandler}/>
+                </ReportContext.Provider>}
         </AuthContext.Provider>
     );
 }
