@@ -41,13 +41,24 @@ function ListAccounts(props)	{
         }      
     }
     const allKeys = ['id','name'];
+   
     const {alldata, fetchDataHandler: getAccounts} = useGetData(allKeys);
     
+    const fetchRecords = (accounts) => {
+    	const loadedAccounts = [];
+
+      for (const accountKey in accounts) {
+        loadedAccounts.push({ id: accountKey, name: accounts[accountKey].name });
+      }
+
+      setAccounts(loadedAccounts);
+    }
+
     useEffect(() =>{
-    	getAccounts('https://expensetracker-706b7-default-rtdb.firebaseio.com/accounts.json');
-    	// return ()=>{
-    	// 	setAccounts([]);
-    	// }
+    	getAccounts('https://expensetracker-706b7-default-rtdb.firebaseio.com/accounts.json',"",fetchRecords);
+    	return ()=>{
+    		setAccounts([]);
+    	}
     },[getAccounts])
 
 	return (
@@ -55,7 +66,7 @@ function ListAccounts(props)	{
 		<>
 			{ showModal && 
 				<Modal onClose={closeModalHandler}>
-					<AddExpense accounts={alldata} id={id} onCancel={closeModalHandler}/>
+					<AddExpense accounts={accounts} id={id} onCancel={closeModalHandler}/>
 				</Modal> 
 			}
 			<Card>
@@ -67,8 +78,8 @@ function ListAccounts(props)	{
 			</Card>
 
 			{
-				(alldata.length > 0 ) &&
-					alldata.map(account => (
+				(accounts.length > 0 ) &&
+					accounts.map(account => (
 						<NavBar onClick={() => navigateHandler("/AccountStatement/" + account.id)} key={account.id} link={"/AccountStatement/" + account.id} account={account}/>
 					))
 			}

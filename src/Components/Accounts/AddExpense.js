@@ -21,6 +21,9 @@ const {alldata, fetchDataHandler: addExpense} = useGetData(allKeys);
 		"month": d.getMonth()+1,
 		"year": d.getFullYear(),
 	};
+	const saveData=(data)=>{
+		console.log(data);
+	}
 	const addExpenseWrapper = async() => {
 	await	addExpense(`https://expensetracker-706b7-default-rtdb.firebaseio.com/expense/${id}.json`, {
 		  method: 'POST',
@@ -28,7 +31,7 @@ const {alldata, fetchDataHandler: addExpense} = useGetData(allKeys);
 		  headers: {
 		    'Content-Type': 'application/json'
 		  }
-		});
+		},saveData);
 	await ctxRep.onExpensesUpdate(expenseDataCtx);
 
 	}
