@@ -9,26 +9,27 @@ function Report(props)	{
 	
 	const ctxRep = useContext(ReportContext);
 	const { expensesUpdated } = ctxRep;
-  const loadedExpenses = [];
+  	const loadedExpenses = [];
 	const [expenses, setExpenses] = useState([]);
-  const allKeys = ['Price', 'description', 'ItemDate'];
-  useGetData(`https://expensetracker-706b7-default-rtdb.firebaseio.com/expense/${props.accountId}.json`, setExpenses, allKeys);
+	const allKeys = ['Price', 'description', 'ItemDate'];
+	const { alldata } = useGetData(`https://expensetracker-706b7-default-rtdb.firebaseio.com/expense/${props.accountId}.json`, allKeys, expenses);
 
   useEffect(()=>{
-
   	if(typeof expensesUpdated.day !== 'undefined')
   	{
-  		console.log(expensesUpdated.day);
-  		setExpenses(expenses => [...expenses,expensesUpdated])
+  		setExpenses(expensesUpdated);
   	}
+  	return () => {
+      setExpenses([]); // This worked for me
+    };
   },[expensesUpdated])
 	
 
 	// console.log(expenses);
 	const accId = props.accountId;
 	let midArr = [];
-	if(expenses.length > 0){
-		expenses.map(function(items,i){
+	if(alldata.length > 0){
+		alldata.map(function(items,i){
 			// if(accId == i){
 				midArr.push(items);
 			// }

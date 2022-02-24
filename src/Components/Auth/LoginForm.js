@@ -1,7 +1,8 @@
-import React, { useRef, useEffect, useReducer, useContext} from 'react';
+import React, { useRef, useState, useEffect, useReducer, useContext} from 'react';
 import classes from './LoginForm.module.css';
 import Input from '../UI/Input';
 import AuthContext from '../Store/auth-context';
+import useGetData from '../../Hooks/useGetData';
 
 const authReducer = (state, action) => {
 	
@@ -30,6 +31,8 @@ const authReducer = (state, action) => {
 
 function LoginForm (props)	{
 
+
+
 	const InitialUser = {email: '', password: '', valid: false};
 
 	const emailRef = useRef();
@@ -37,7 +40,12 @@ function LoginForm (props)	{
 	
 	const [authState, dispatch] =  useReducer(authReducer, InitialUser);
 	const ctxAuth =  useContext(AuthContext);
-
+	
+	const [localuser, setLocaluser] = useState({});
+	const allKeys = ["email", "password"];
+	const {alldata, dataDepend} = useGetData(`https://expensetracker-706b7-default-rtdb.firebaseio.com/users.json`, allKeys, localuser);
+	
+	
 	const changeFormHandler = () => {
 		dispatch({type:"FORM_VALIDATE", email: emailRef.current.value, password: passwordRef.current.value })
 	}
@@ -45,17 +53,17 @@ function LoginForm (props)	{
 	const submitHandler = (e) => {
 		e.preventDefault();
 		
-		
-		if( emailRef.current.value !== '' )
-		{
-			console.log("updated state"+ authState.email);
-			ctxAuth.onSetUser(emailRef.current.value, passwordRef.current.value)  
+		if( emailRef.current.value !== '' ){
+			// if(setLocaluser({email: emailRef.current.value, password: passwordRef.current.value })){
+				setLocaluser({email: emailRef.current.value, password: passwordRef.current.value });
+
+				ctxAuth.onSetUser(emailRef.current.value, passwordRef.current.value ); 
+			// }
 		}
 	}
 	
 	useEffect (() => {
 		emailRef.current.focus();
-		console.log("focusing");
 	}, []);
 
 	return (

@@ -6,8 +6,9 @@ import ReportContext from '../Store/report-context';
 function AddExpense(props)	{
 const ctxRep =  useContext(ReportContext);
 
-async function addExpenseHandler(expense) {
-	const response = await fetch(`https://expensetracker-706b7-default-rtdb.firebaseio.com/expense/${props.id}.json`, {
+ const addExpenseHandler = async (expense) => {
+ 	const id = props.id.trim() !== "" ? props.id : userInput.accountid;
+	const response = await fetch(`https://expensetracker-706b7-default-rtdb.firebaseio.com/expense/${id}.json`, {
 	  method: 'POST',
 	  body: JSON.stringify(expense),
 	  headers: {
@@ -15,7 +16,17 @@ async function addExpenseHandler(expense) {
 	  }
 	});
 	const data = await response.json();
-	// console.log(data);
+	let d = new Date(userInput.date);
+	
+	const expenseDataCtx = {
+		"description": userInput.description,
+		"Price": userInput.price,
+		"day": d.getUTCDate(),
+		"month": d.getMonth()+1,
+		"year": d.getFullYear(),
+	};
+	ctxRep.onExpensesUpdate(expenseDataCtx);
+	
 }
 
 
@@ -23,6 +34,7 @@ const [userInput, setUserInput] = useState({
 	description: '',
 	price: '',
 	date: '',
+	accountid: '',
 });
 
 const descriptionChangeHandler = (e) => {
@@ -48,6 +60,13 @@ const dateChangeHandler = (e) => {
 	});
 	
 }
+const accountChangeHandler = (e) => {
+
+	setUserInput((prevState)  => {
+		return {...prevState, accountid: e.target.value}
+	});
+	
+}
 
 const submitHandler = (e) => {
 	e.preventDefault();
@@ -57,28 +76,31 @@ const submitHandler = (e) => {
 		"Price": userInput.price,
 		"ItemDate": new Date(userInput.date),
 	};
-	let d = new Date(userInput.date);
-	const expenseDataCtx = {
-		"description": userInput.description,
-		"Price": userInput.price,
-		"day": d.getUTCDate(),
-		"month": d.getMonth()+1,
-		"year": d.getFullYear(),
-	};
-	addExpenseHandler(expenseData)
+	
+	addExpenseHandler(expenseData);
 	setUserInput({
 		description: '',
 		price: '',
-		date: ''
+		date: '',
+		accountid: '',
 	});
 	props.onCancel();
-	ctxRep.onExpensesUpdate(expenseDataCtx);
+	
 
 }
 	return (
 		<div className={classes['new-expense']}>
 			<form onSubmit = {submitHandler}>
 				<div className={classes['new-expense__controls']}>
+					{props.id.trim() === "" && 
+					<div className={classes['new-expense__control']}>
+						<label>Select Account</label>
+						<select onChange={accountChangeHandler}>
+						{props.accounts.map(account => (
+							<option key={account.id} value={account.id}>{account.name}</option>
+						))}
+						</select>
+					</div>}
 					<div className={classes['new-expense__control']}>
 						<label>Description</label>
 						<input onChange={descriptionChangeHandler} type="text" value={userInput.description}/>

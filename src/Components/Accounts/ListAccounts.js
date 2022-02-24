@@ -19,7 +19,7 @@ function ListAccounts(props)	{
 	const currLocation = location.pathname;
 
 	const id = currLocation.substring(currLocation.lastIndexOf('/') + 1);
-	// console.log(id);
+	console.log(id);
 
 	const [accounts, setAccounts] = useState([]);
 
@@ -31,19 +31,19 @@ function ListAccounts(props)	{
         setShowModal(true);      
     }
     const allKeys = ['id','name'];
-    useGetData('https://expensetracker-706b7-default-rtdb.firebaseio.com/accounts.json',setAccounts, allKeys);
+    const {alldata} = useGetData('https://expensetracker-706b7-default-rtdb.firebaseio.com/accounts.json', allKeys, accounts);
     
 
 	return (
 
 		<Card>
-			{ showModal && <Modal onClose={closeModalHandler}><AddExpense id={id} onCancel={closeModalHandler}/></Modal>}
+			{ showModal && <Modal onClose={closeModalHandler}><AddExpense accounts={alldata} id={id} onCancel={closeModalHandler}/></Modal>}
 			<NavBar onClick={props.logout} key="sdasdsdsa" link="/" account={{id:"121223243", name:"Logout"}}/>
 			<NavBar onClick={openModalHandler} key="exp_1212" link={currLocation} account={{id:"exp_123", name:"Add Expense"}}/>
 			<NavBar key="sdasd" link="/" account={{id:"1212", name:"all accounts"}}/>
 			{
-				(accounts.length > 0 ) &&
-					accounts.map(account => (
+				(alldata.length > 0 ) &&
+					alldata.map(account => (
 						<NavBar key={account.id} link={"/AccountStatement/" + account.id} account={account}/>
 					))
 			}

@@ -5,7 +5,9 @@ import AuthContext from './Components/Store/auth-context';
 import ReportContext from './Components/Store/report-context';
 
 
+
 function App() {
+
     const [userObj, setUserObj] = useState({email: '', password: ''});
     const [expenseNotify, setExpenseNotify] = useState({});
     
@@ -24,6 +26,9 @@ function App() {
         if(localEmail){
             setUserObj({email:localEmail});
         }
+        return () => {
+          setUserObj({}); // This worked for me
+        };
     },[]);
 
     const logoutHandler = () => {

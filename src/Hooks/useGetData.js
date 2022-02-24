@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import ReportContext from '../Components/Store/report-context';
 
-function useGetData(url, setData, allKeys)	{
-    const fetchDataHandler = useCallback(async () => {
-    const allDataWrapper = [];
+function useGetData(url, allKeys, dataDepend = "")	{
+    const [alldata, setAlldata] = useState([]);
+    const fetchDataHandler = async () => {
     
     try {
       const response = await fetch(url);
@@ -12,9 +12,7 @@ function useGetData(url, setData, allKeys)	{
       }
 
       const data = await response.json();
-
-      const allData = [];
-
+      const allInnerData = [];
       for (const key in data) {
   			var obj = Object.create({});
       		for (const singleKey of allKeys) {
@@ -27,17 +25,22 @@ function useGetData(url, setData, allKeys)	{
       		    obj[singleKey] = data[key][singleKey];
             }
           }
-	        allData.push(obj);
+	        allInnerData.push(obj);
       }
-        return setData(allData);
+        setAlldata(allInnerData);
     } catch (error) {
       
     }
-  }, []);
+  }
 
 	useEffect(() => {
 	    fetchDataHandler();
-	}, [fetchDataHandler]);
+      return () => {
+        setAlldata([]); // This worked for me
+      };
+	}, [dataDepend]);
+
+  return {alldata, dataDepend};
 }
 
 export default useGetData;
