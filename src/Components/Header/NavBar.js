@@ -1,4 +1,4 @@
-import React,{ useMemo} from 'react';
+import React from 'react';
 import classes from './NavBar.module.css';
 import {
   BrowserRouter as Router,
@@ -12,17 +12,17 @@ function NavBar(props)	{
 	const currLocation = location.pathname;
 	return (
 		<>
-	{ props.account.name !== 'all accounts' && !(currLocation.includes('AccountStatement')) && 	 
-		<div key={props.account.id} className={`${props.account.name !== 'Logout' ?  classes.account : '' } `} >
-			<NavLink onClick={props.onClick} key={props.account.id} to={props.link}>{props.account.name}</NavLink>
-		</div>
-	}
-	{ (currLocation.includes('AccountStatement')) && (props.account.name === 'Add Expense' || props.account.name === 'all accounts' || props.account.name === 'Logout') && 	 
-		<div key="all_accounts_div"  >
-			<NavLink onClick={props.onClick} key="all_accounts_link" to={props.link}>{props.account.name}</NavLink>
-		</div>
-	}
-	</>
+			{ props.account.name !== 'all accounts' && !(currLocation.includes('AccountStatement')) && 	 
+				<div onClick={props.onClick} key={props.account.id} className={`${(props.account.name !== 'Logout' && props.account.name !== 'Add Expense') ?  classes.account : classes.all_accounts_div } `} >
+					<NavLink onClick={props.onClick} key={props.account.id} to={props.link}>{props.account.name}</NavLink>
+				</div>
+			}
+			{ (currLocation.includes('AccountStatement')) && (props.account.name === 'Add Expense' || props.account.name === 'all accounts' || props.account.name === 'Logout') && 	 
+				<div onClick={props.onClick} className={classes.all_accounts_div}>
+					<NavLink onClick={props.onClick} key="all_accounts_link" to={props.link}>{props.account.name}</NavLink>
+				</div>
+			}
+		</>
 	)
 }
 

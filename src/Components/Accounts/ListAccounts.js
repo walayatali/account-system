@@ -5,6 +5,7 @@ import AddExpense from './AddExpense';
 import NavBar from '../Header/NavBar';
 import Modal from '../UI/Modal';
 import useGetData from '../../Hooks/useGetData';
+import classes from './ListAccounts.module.css';
 import {
   BrowserRouter as Router,
   Routes,
@@ -19,7 +20,6 @@ function ListAccounts(props)	{
 	const currLocation = location.pathname;
 
 	const id = currLocation.substring(currLocation.lastIndexOf('/') + 1);
-	console.log(id);
 
 	const [accounts, setAccounts] = useState([]);
 
@@ -36,11 +36,20 @@ function ListAccounts(props)	{
 
 	return (
 
-		<Card>
-			{ showModal && <Modal onClose={closeModalHandler}><AddExpense accounts={alldata} id={id} onCancel={closeModalHandler}/></Modal>}
-			<NavBar onClick={props.logout} key="sdasdsdsa" link="/" account={{id:"121223243", name:"Logout"}}/>
-			<NavBar onClick={openModalHandler} key="exp_1212" link={currLocation} account={{id:"exp_123", name:"Add Expense"}}/>
-			<NavBar key="sdasd" link="/" account={{id:"1212", name:"all accounts"}}/>
+		<>
+			{ showModal && 
+				<Modal onClose={closeModalHandler}>
+					<AddExpense accounts={alldata} id={id} onCancel={closeModalHandler}/>
+				</Modal> 
+			}
+			<Card>
+				<div className={classes.nav_buttons}>
+					<NavBar onClick={props.logout} key="logout" link="/" account={{id:"logout", name:"Logout"}}/>
+					<NavBar onClick={openModalHandler} key="add-expense" link={currLocation} account={{id:"add-expense", name:"Add Expense"}}/>
+					<NavBar key="all_accounts" link="/" account={{id:"all_accounts", name:"all accounts"}}/>
+				</div>
+			</Card>
+			
 			{
 				(alldata.length > 0 ) &&
 					alldata.map(account => (
@@ -48,9 +57,9 @@ function ListAccounts(props)	{
 					))
 			}
 			<Routes>
-						<Route exact path="/AccountStatement/:accountId" element={<AccountStatement  />}  />
+				<Route exact path="/AccountStatement/:accountId" element={<AccountStatement  />}  />
 			</Routes>
-		</Card>
+		</>
 	)
 }
 
