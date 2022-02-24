@@ -33,12 +33,22 @@ function ListAccounts(props)	{
         setShowModal(true);      
     }
 
-    const navigateHandler = (e) => {
-        navigate("/AccountStatement/" + e);      
+    const navigateHandler = (e,logout=false) => {
+        navigate(e);
+        if(logout)
+        {
+        	props.logout()
+        }      
     }
     const allKeys = ['id','name'];
-    const {alldata} = useGetData('https://expensetracker-706b7-default-rtdb.firebaseio.com/accounts.json', allKeys, accounts);
+    const {alldata, fetchDataHandler: getAccounts} = useGetData(allKeys);
     
+    useEffect(() =>{
+    	getAccounts('https://expensetracker-706b7-default-rtdb.firebaseio.com/accounts.json');
+    	// return ()=>{
+    	// 	setAccounts([]);
+    	// }
+    },[getAccounts])
 
 	return (
 
@@ -50,16 +60,16 @@ function ListAccounts(props)	{
 			}
 			<Card>
 				<div className={classes.nav_buttons}>
-					<NavBar onClick={props.logout} key="logout" link="/" account={{id:"logout", name:"Logout"}}/>
+					<NavBar onClick={() => navigateHandler("/",true)} key="logout" link="/" account={{id:"logout", name:"Logout"}}/>
 					<NavBar onClick={openModalHandler} key="add-expense" link={currLocation} account={{id:"add-expense", name:"Add Expense"}}/>
-					<NavBar key="all_accounts" link="/" account={{id:"all_accounts", name:"all accounts"}}/>
+					<NavBar onClick={() => navigateHandler("/")} key="all_accounts" link="/" account={{id:"all_accounts", name:"all accounts"}}/>
 				</div>
 			</Card>
 
 			{
 				(alldata.length > 0 ) &&
 					alldata.map(account => (
-						<NavBar onClick={() => navigateHandler(account.id)} key={account.id} link={"/AccountStatement/" + account.id} account={account}/>
+						<NavBar onClick={() => navigateHandler("/AccountStatement/" + account.id)} key={account.id} link={"/AccountStatement/" + account.id} account={account}/>
 					))
 			}
 			<Routes>

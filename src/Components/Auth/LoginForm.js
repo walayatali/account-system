@@ -31,8 +31,6 @@ const authReducer = (state, action) => {
 
 function LoginForm (props)	{
 
-
-
 	const InitialUser = {email: '', password: '', valid: false};
 
 	const emailRef = useRef();
@@ -43,22 +41,26 @@ function LoginForm (props)	{
 	
 	const [localuser, setLocaluser] = useState({});
 	const allKeys = ["email", "password"];
-	const {alldata, dataDepend} = useGetData(`https://expensetracker-706b7-default-rtdb.firebaseio.com/users.json`, allKeys, localuser);
+	const {alldata, dataDepend, fetchDataHandler: sendCredentials} = useGetData(allKeys);
 	
 	
 	const changeFormHandler = () => {
 		dispatch({type:"FORM_VALIDATE", email: emailRef.current.value, password: passwordRef.current.value })
 	}
 
-	const submitHandler = (e) => {
+	const submitHandler = async(e) => {
 		e.preventDefault();
 		
 		if( emailRef.current.value !== '' ){
-			// if(setLocaluser({email: emailRef.current.value, password: passwordRef.current.value })){
-				setLocaluser({email: emailRef.current.value, password: passwordRef.current.value });
+			const goAuth = async()=> {
+				await sendCredentials(`https://expensetracker-706b7-default-rtdb.firebaseio.com/users.json`);
+				await ctxAuth.onSetUser(emailRef.current.value, passwordRef.current.value ); 
 
-				ctxAuth.onSetUser(emailRef.current.value, passwordRef.current.value ); 
+			}
+			// if(setLocaluser({email: emailRef.current.value, password: passwordRef.current.value })){
+				// setLocaluser({email: emailRef.current.value, password: passwordRef.current.value });
 			// }
+			goAuth();
 		}
 	}
 	

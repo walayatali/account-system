@@ -1,17 +1,23 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import ReportContext from '../Components/Store/report-context';
 
-function useGetData(url, allKeys, dataDepend = "")	{
+function useGetData( allKeys, dataDepend = "")	{
     const [alldata, setAlldata] = useState([]);
-    const fetchDataHandler = async () => {
-    
+    const fetchDataHandler = useCallback(async (url, config="") => {
     try {
-      const response = await fetch(url);
+        let response="";
+        if(config !== ""){
+            response = await fetch(url,config);
+        }
+        else
+        {
+            response = await fetch(url);
+        }
       if (!response.ok) {
         throw new Error('Something went wrong!');
       }
 
-      const data = await response.json();
+    const data = await response.json();
       const allInnerData = [];
       for (const key in data) {
   			var obj = Object.create({});
@@ -27,20 +33,24 @@ function useGetData(url, allKeys, dataDepend = "")	{
           }
 	        allInnerData.push(obj);
       }
+      if(config !== "")
+    {
+        return;
+    }
         setAlldata(allInnerData);
     } catch (error) {
-      
+      console.log(error);
     }
-  }
+  },[])
 
-	useEffect(() => {
-	    fetchDataHandler();
-      return () => {
-        setAlldata([]); // This worked for me
-      };
-	}, [dataDepend]);
+	// useEffect(() => {
+	//     fetchDataHandler();
+ //        return () => {
+ //            setAlldata([]); // This worked for me
+ //            };
+ //        }, [dataDepend]);
 
-  return {alldata, dataDepend};
+    return {alldata, dataDepend, fetchDataHandler};
 }
 
 export default useGetData;

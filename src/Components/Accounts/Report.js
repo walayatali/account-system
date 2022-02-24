@@ -12,17 +12,14 @@ function Report(props)	{
   	const loadedExpenses = [];
 	const [expenses, setExpenses] = useState([]);
 	const allKeys = ['Price', 'description', 'ItemDate'];
-	const { alldata } = useGetData(`https://expensetracker-706b7-default-rtdb.firebaseio.com/expense/${props.accountId}.json`, allKeys, expenses);
+	const { alldata,fetchDataHandler: getExpenses } = useGetData(allKeys);
 
   useEffect(()=>{
-  	if(typeof expensesUpdated.day !== 'undefined')
-  	{
-  		setExpenses(expensesUpdated);
-  	}
+  		getExpenses(`https://expensetracker-706b7-default-rtdb.firebaseio.com/expense/${props.accountId}.json`);
   	return () => {
       setExpenses([]); // This worked for me
     };
-  },[expensesUpdated])
+  },[getExpenses, expensesUpdated])
 	
 
 	// console.log(expenses);

@@ -1,21 +1,17 @@
 import React, { useState, useContext } from 'react';
 import classes from './AddExpense.module.css';
 import ReportContext from '../Store/report-context';
+import useGetData from '../../Hooks/useGetData';
+
 
 
 function AddExpense(props)	{
 const ctxRep =  useContext(ReportContext);
+const allKeys = ['description', 'Price', 'day', 'month', 'year'];
+const {alldata, fetchDataHandler: addExpense} = useGetData(allKeys);
 
  const addExpenseHandler = async (expense) => {
  	const id = props.id.trim() !== "" ? props.id : userInput.accountid;
-	const response = await fetch(`https://expensetracker-706b7-default-rtdb.firebaseio.com/expense/${id}.json`, {
-	  method: 'POST',
-	  body: JSON.stringify(expense),
-	  headers: {
-	    'Content-Type': 'application/json'
-	  }
-	});
-	const data = await response.json();
 	let d = new Date(userInput.date);
 	
 	const expenseDataCtx = {
@@ -25,7 +21,26 @@ const ctxRep =  useContext(ReportContext);
 		"month": d.getMonth()+1,
 		"year": d.getFullYear(),
 	};
-	ctxRep.onExpensesUpdate(expenseDataCtx);
+	const addExpenseWrapper = async() => {
+	await	addExpense(`https://expensetracker-706b7-default-rtdb.firebaseio.com/expense/${id}.json`, {
+		  method: 'POST',
+		  body: JSON.stringify(expense),
+		  headers: {
+		    'Content-Type': 'application/json'
+		  }
+		});
+	await ctxRep.onExpensesUpdate(expenseDataCtx);
+
+	}
+	addExpenseWrapper();
+	// const response = await fetch(`https://expensetracker-706b7-default-rtdb.firebaseio.com/expense/${id}.json`, {
+	//   method: 'POST',
+	//   body: JSON.stringify(expense),
+	//   headers: {
+	//     'Content-Type': 'application/json'
+	//   }
+	// });
+	// const data = await response.json();
 	
 }
 
