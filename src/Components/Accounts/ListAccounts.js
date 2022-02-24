@@ -12,10 +12,12 @@ import {
   Route,
   NavLink,
   useLocation,
+  useNavigate
 } from "react-router-dom";
 
 
 function ListAccounts(props)	{
+	const navigate = useNavigate();
 	let location = useLocation();
 	const currLocation = location.pathname;
 
@@ -29,6 +31,10 @@ function ListAccounts(props)	{
     }
     const openModalHandler = () => {
         setShowModal(true);      
+    }
+
+    const navigateHandler = (e) => {
+        navigate("/AccountStatement/" + e);      
     }
     const allKeys = ['id','name'];
     const {alldata} = useGetData('https://expensetracker-706b7-default-rtdb.firebaseio.com/accounts.json', allKeys, accounts);
@@ -49,15 +55,15 @@ function ListAccounts(props)	{
 					<NavBar key="all_accounts" link="/" account={{id:"all_accounts", name:"all accounts"}}/>
 				</div>
 			</Card>
-			
+
 			{
 				(alldata.length > 0 ) &&
 					alldata.map(account => (
-						<NavBar key={account.id} link={"/AccountStatement/" + account.id} account={account}/>
+						<NavBar onClick={() => navigateHandler(account.id)} key={account.id} link={"/AccountStatement/" + account.id} account={account}/>
 					))
 			}
 			<Routes>
-				<Route exact path="/AccountStatement/:accountId" element={<AccountStatement  />}  />
+				<Route  exact path="/AccountStatement/:accountId" element={<AccountStatement  />}  />
 			</Routes>
 		</>
 	)
