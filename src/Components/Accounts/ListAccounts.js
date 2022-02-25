@@ -1,7 +1,8 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback, useContext} from 'react';
 import Card from '../UI/Card';
 import AccountStatement from './AccountStatement';
 import AddExpense from './AddExpense';
+import AddAccount from './AddAccount';
 import NavBar from '../Header/NavBar';
 import Modal from '../UI/Modal';
 import useGetData from '../../Hooks/useGetData';
@@ -14,9 +15,14 @@ import {
   useLocation,
   useNavigate
 } from "react-router-dom";
+import AccountContext from '../Store/account-context';
 
 
 function ListAccounts(props)	{
+
+	const accRep = useContext(AccountContext);
+	const { accountsUpdated } = accRep;
+
 	const navigate = useNavigate();
 	let location = useLocation();
 	const currLocation = location.pathname;
@@ -25,12 +31,21 @@ function ListAccounts(props)	{
 
 	const [accounts, setAccounts] = useState([]);
 
-	const[showModal, setShowModal] = useState(false);
-	const closeModalHandler = () => {
-        setShowModal(false);      
+	const[showExpenseModal, setShowExpenseModal] = useState(false);
+	const[showAccountModal, setShowAccountModal] = useState(false);
+	
+	const closeExpenseModalHandler = () => {
+        setShowExpenseModal(false);      
     }
-    const openModalHandler = () => {
-        setShowModal(true);      
+    const openExpenseModalHandler = () => {
+        setShowExpenseModal(true);      
+    }
+
+    const closeAccountModalHandler = () => {
+        setShowAccountModal(false);      
+    }
+    const openAccountModalHandler = () => {
+        setShowAccountModal(true);      
     }
 
     const navigateHandler = (e,logout=false) => {
@@ -48,31 +63,41 @@ function ListAccounts(props)	{
     	const loadedAccounts = [];
 
       for (const accountKey in accounts) {
-        loadedAccounts.push({ id: accountKey, name: accounts[accountKey].name });
+        loadedAccounts.push({ id: accounts[accountKey].id, name: accounts[accountKey].name });
       }
 
       setAccounts(loadedAccounts);
     }
 
     useEffect(() =>{
-    	getAccounts('https://expensetracker-706b7-default-rtdb.firebaseio.com/accounts.json',"",fetchRecords);
+    	if(typeof accountsUpdated.name !== "undefined"){
+  			setAccounts(accounts.concat(accountsUpdated));
+  		}else{
+    		getAccounts('https://expensetracker-706b7-default-rtdb.firebaseio.com/accounts.json',"",fetchRecords);
+    	}
     	return ()=>{
     		setAccounts([]);
     	}
-    },[getAccounts])
+    },[getAccounts, accountsUpdated])
 
 	return (
 
 		<>
-			{ showModal && 
-				<Modal onClose={closeModalHandler}>
-					<AddExpense accounts={accounts} id={id} onCancel={closeModalHandler}/>
+			{ showAccountModal && 
+				<Modal onClose={closeAccountModalHandler}>
+					<AddAccount onCancel={closeAccountModalHandler}/>
+				</Modal> 
+			}
+			{ showExpenseModal && 
+				<Modal onClose={closeExpenseModalHandler}>
+					<AddExpense accounts={accounts} id={id} onCancel={closeExpenseModalHandler}/>
 				</Modal> 
 			}
 			<Card>
 				<div className={classes.nav_buttons}>
 					<NavBar onClick={() => navigateHandler("/",true)} key="logout" link="/" account={{id:"logout", name:"Logout"}}/>
-					<NavBar onClick={openModalHandler} key="add-expense" link={currLocation} account={{id:"add-expense", name:"Add Expense"}}/>
+					<NavBar onClick={openAccountModalHandler} key="add-account" link={currLocation} account={{id:"add-account", name:"Add Account"}}/>
+					<NavBar onClick={openExpenseModalHandler} key="add-expense" link={currLocation} account={{id:"add-expense", name:"Add Expense"}}/>
 					<NavBar onClick={() => navigateHandler("/")} key="all_accounts" link="/" account={{id:"all_accounts", name:"all accounts"}}/>
 				</div>
 			</Card>

@@ -3,6 +3,7 @@ import Login from './Components/Auth/Login';
 import ListAccounts from './Components/Accounts/ListAccounts';
 import AuthContext from './Components/Store/auth-context';
 import ReportContext from './Components/Store/report-context';
+import AccountContext from './Components/Store/account-context';
 
 
 
@@ -10,6 +11,7 @@ function App() {
 
     const [userObj, setUserObj] = useState({email: '', password: ''});
     const [expenseNotify, setExpenseNotify] = useState({});
+    const [accountNotify, setAccountNotify] = useState({});
     
     const authContextObj = {
         email: userObj.email,
@@ -43,13 +45,21 @@ function App() {
             setExpenseNotify(val);
         }
     }
+    const accountsUpdatedObj = {
+        accountsUpdated: accountNotify,
+        onAccountsUpdate: (val) => {
+            setAccountNotify(val);
+        }
+    }
 
     return (
         <AuthContext.Provider value={authContextObj}>
             {!(userObj.email) && <Login/>}
             {(userObj.email) && 
                 <ReportContext.Provider value={expensesUpdatedObj}>
-                    <ListAccounts logout={logoutHandler}/>
+                    <AccountContext.Provider value={accountsUpdatedObj}>
+                        <ListAccounts logout={logoutHandler}/>
+                    </AccountContext.Provider>
                 </ReportContext.Provider>}
         </AuthContext.Provider>
     );
