@@ -31,7 +31,7 @@ const authReducer = (state, action) => {
 
 function LoginForm (props)	{
 
-	const InitialUser = {email: '', password: '', valid: false};
+	const InitialUser = {email: '', password: '', valid: false, error: false, errorMessage: ''};
 
 	const emailRef = useRef();
 	const passwordRef = useRef();
