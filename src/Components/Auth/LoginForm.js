@@ -10,13 +10,15 @@ const authReducer = (state, action) => {
 		if (action.email.trim() === "")
 		{
 			return {
-				email: state.email, password: state.password, valid:false
+				email: state.email, password: state.password, valid:false,
+				error: true, errorMessage: 'Email cannot be empty'
 			}	
 		}
 		else if (action.password.trim() === "" || action.password.trim().length < 6)
 		{
 			return {
-				email: state.email, password: state.password, valid:false
+				email: state.email, password: state.password, valid:false,
+				error: true, errorMessage: 'Password cannot be empty <br> must be atleast 7 chracters'
 			}	
 		}
 		else{
@@ -48,12 +50,16 @@ function LoginForm (props)	{
 		dispatch({type:"FORM_VALIDATE", email: emailRef.current.value, password: passwordRef.current.value })
 	}
 
+	const fetchCredentials = (data) => {
+		// console.log(data);
+	}
+
 	const submitHandler = async(e) => {
 		e.preventDefault();
-		
-		if( emailRef.current.value !== '' ){
+		dispatch({type:"FORM_VALIDATE", email: emailRef.current.value, password: passwordRef.current.value })
+		if( authState.valid){
 			const goAuth = async()=> {
-				await sendCredentials(`https://expensetracker-706b7-default-rtdb.firebaseio.com/users.json`);
+				await sendCredentials(`https://expensetracker-706b7-default-rtdb.firebaseio.com/users.json`,"", fetchCredentials);
 				await ctxAuth.onSetUser(emailRef.current.value, passwordRef.current.value ); 
 
 			}
@@ -70,6 +76,7 @@ function LoginForm (props)	{
 
 	return (
 		<form className={classes.form}  onSubmit={submitHandler}>
+		{authState.error && <p className={classes.error}>{authState.errorMessage}</p>}
 			<Input  label="Email" ref={emailRef} input={{
 				type: "email",
 				onChange: changeFormHandler,
@@ -78,7 +85,7 @@ function LoginForm (props)	{
 				type: "password",
 				onChange: changeFormHandler
 			}}/>
-			<button disabled={!authState.valid} type="submit">Login</button>
+			<button  type="submit">Login</button>
 		</form>
 	)
 }
