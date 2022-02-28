@@ -26,7 +26,7 @@ function Report(props)	{
 	      }
 	      setExpenses(loadedExpenses);
     }
-  useEffect(()=>{
+  useEffect(() => {
   		if(typeof expensesUpdated.day !== "undefined"){
   			setExpenses(expenses.concat(expensesUpdated));
   		}else{
@@ -37,9 +37,20 @@ function Report(props)	{
     };
   },[getExpenses, expensesUpdated])
 
-  useEffect(()=>{
+  useEffect(()=> {
   		ctxRep.onExpensesUpdate({});
-  },[])
+  },[]);
+
+  useEffect(()=> {
+  		const filteredExpenses = expenses.filter(function(expense) {
+
+		  return  parseInt(props.filterData.price) === parseInt(expense.Price);
+		});
+		setExpenses(filteredExpenses);
+  },[props.filterData]);
+
+  
+
 	
 
 	// console.log(expenses);
