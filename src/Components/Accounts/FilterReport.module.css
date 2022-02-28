@@ -62,3 +62,7 @@
 .new-filter button.alternative:active {
   background-color: #ddb3f8;
 }
+.error{
+  color: red;
+  font-weight: bold;
+}
