@@ -5,7 +5,7 @@ import LoginForm from './LoginForm';
 function Login(props)	{
 	return (
 		<Card>
-			<h1>Welcome</h1>
+			<h1>Welcome To</h1>
 			<LoginForm/>
 		</Card>
 	)
