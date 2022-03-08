@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import Login from './Components/Auth/Login';
 import ListAccounts from './Components/Accounts/ListAccounts';
+import AccountStatement from './Components/Accounts/AccountStatement';
 import AuthContext from './Components/Store/auth-context';
 import ReportContext from './Components/Store/report-context';
 import AccountContext from './Components/Store/account-context';
-
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  NavLink,
+  useLocation,
+  useNavigate,
+  Navigate
+} from "react-router-dom";
 
 
 function App() {
@@ -57,8 +66,13 @@ function App() {
             {!(userObj.email) && <Login/>}
             {(userObj.email) && 
                 <ReportContext.Provider value={expensesUpdatedObj}>
-                    <AccountContext.Provider value={accountsUpdatedObj}>
-                        <ListAccounts logout={logoutHandler}/>
+                    <AccountContext.Provider value={accountsUpdatedObj}>    
+                        
+                        <Routes>
+                            <Route path="/" element={<ListAccounts logout={logoutHandler}/>}> 
+                                <Route exact path="AccountStatement/:accountId" element={<AccountStatement  />}  />
+                            </Route>
+                        </Routes>
                     </AccountContext.Provider>
                 </ReportContext.Provider>}
         </AuthContext.Provider>

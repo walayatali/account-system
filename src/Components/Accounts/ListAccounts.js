@@ -13,7 +13,9 @@ import {
   Route,
   NavLink,
   useLocation,
-  useNavigate
+  useNavigate,
+  Navigate,
+  Outlet
 } from "react-router-dom";
 import AccountContext from '../Store/account-context';
 
@@ -108,9 +110,7 @@ function ListAccounts(props)	{
 						<NavBar onClick={() => navigateHandler("/AccountStatement/" + account.id)} key={account.id} link={"/AccountStatement/" + account.id} account={account}/>
 					))
 			}
-			<Routes>
-				<Route  exact path="/AccountStatement/:accountId" element={<AccountStatement  />}  />
-			</Routes>
+			<Outlet/>
 		</>
 	)
 }

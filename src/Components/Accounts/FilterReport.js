@@ -69,7 +69,6 @@ function FilterReport(props)	{
 		dispatch({type: "VALIDATE_FILTER", filterDate: dateRef.current.value, filterPrice: priceRef.current.value})
 		if (filterState.filterValid)
 		{
-			console.log("esas");
 			props.onFilterExpenses(dateRef.current.value, priceRef.current.value);
 		}
 	}

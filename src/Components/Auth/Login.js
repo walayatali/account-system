@@ -5,6 +5,7 @@ import LoginForm from './LoginForm';
 function Login(props)	{
 	return (
 		<Card>
+			<h1> Welcome To Digital Account Hub</h1>
 			<LoginForm/>
 		</Card>
 	)
